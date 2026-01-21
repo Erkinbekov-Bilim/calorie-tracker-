@@ -130,4 +130,5 @@ input:focus {
   background: red;
   color: var(--color-text-white);
   padding: var(--padding-y-x-xs);
+  border-radius: var(--border-radius-sm);
 }

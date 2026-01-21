@@ -2,6 +2,10 @@ import { useForm } from 'react-hook-form';
 import './MealForm.css';
 import Button from '../../UI/Button/Button';
 import type { MotionProps } from 'motion/react';
+import type IMealMutation from '../../../types/meals/mealMutation';
+import axiosAPI from '../../api/axiosAPI';
+import useGetMealsData from '../../hooks/useGetMealsData';
+import { useNavigate } from 'react-router-dom';
 
 const MealForm = () => {
   const {
@@ -9,12 +13,16 @@ const MealForm = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<IMealMutation>({
     defaultValues: {
+      meal_time: '',
       meal_description: '',
-      meal_calorie: '',
+      meal_calorie: 0,
     },
   });
+
+  const { error, mealsData } = useGetMealsData('meals_time.json');
+  const navigate = useNavigate();
 
   const animation: MotionProps = {
     initial: {
@@ -34,10 +42,20 @@ const MealForm = () => {
     },
   };
 
+  const onSubmitMeal = async (data: IMealMutation) => {
+    await axiosAPI.post('meals.json', {
+      ...data,
+      meal_calorie: Number(data.meal_calorie),
+    });
+
+    reset();
+    navigate('/');
+  };
+
   return (
     <>
       <div className="form-block">
-        <form>
+        <form onSubmit={handleSubmit(onSubmitMeal)}>
           <div className="form-group">
             <div className="form-input-block">
               <label htmlFor="meal_time" className="form-input-label">
@@ -45,16 +63,27 @@ const MealForm = () => {
               </label>
               <select
                 id="meal_time"
-                name="meal_time"
                 title="meal time"
                 className="form-select"
+                {...register('meal_time', {
+                  required: 'This field is required',
+                })}
+                name="meal_time"
               >
-                <option disabled selected className="form-select-option">
-                  Select meal time
+                <option disabled className="form-select-option" value="">
+                  {error.message !== '' ? error.message : 'Select meal time'}
                 </option>
-                <option value="" className="form-select-option">
-                  Breakfast
-                </option>
+                {mealsData.length > 0 &&
+                  error.message === '' &&
+                  mealsData.map((mealData) => (
+                    <option
+                      value={mealData.id}
+                      className="form-select-option"
+                      key={mealData.id}
+                    >
+                      {mealData.meal_time}
+                    </option>
+                  ))}
               </select>
             </div>
             <div className="form-input-block">
@@ -92,18 +121,19 @@ const MealForm = () => {
               <input
                 id="meal_calorie"
                 type="number"
-                title="meal"
+                title="meal_calorie"
                 className="form-input"
                 placeholder="meal calorie"
                 {...register('meal_calorie', {
+                  valueAsNumber: true,
                   required: 'This field is required',
-                  minLength: {
-                    value: 2,
-                    message: 'Minimum length should be 1',
+                  min: {
+                    value: 1,
+                    message: 'Minimum value should be 1',
                   },
-                  maxLength: {
-                    value: 50,
-                    message: 'Maximum length should be 10',
+                  max: {
+                    value: 30000,
+                    message: 'Maximum value should be 30000',
                   },
                 })}
                 name="meal_calorie"
