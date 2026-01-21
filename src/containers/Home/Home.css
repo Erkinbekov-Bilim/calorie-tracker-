@@ -1,0 +1,21 @@
+.meals {
+  display: flex;
+  flex-direction: column;
+  row-gap: 50px;
+}
+
+.route-link {
+  text-transform: uppercase;
+  color: var(--color-text-900);
+}
+
+.meals-block {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 50px;
+  row-gap: 30px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
