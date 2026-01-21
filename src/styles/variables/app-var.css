@@ -1,0 +1,18 @@
+:root {
+  --app-width: 1000px;
+  --app-height: 800px;
+
+  --letter-spacing-sm: 0.2rem;
+  --letter-spacing-md: 0.4rem;
+
+  --padding-y-x-xs: 10px;
+  --padding-y-x-sm: 20px;
+
+  --margin-y-x-sm: 10px;
+
+  --margin-top-sm: 10px;
+  --margin-start-sm: 15px;
+
+  --border-radius-sm: 12px;
+  --border-radius-md: 18px;
+}
