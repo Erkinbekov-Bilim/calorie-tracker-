@@ -6,7 +6,8 @@
 
 .route-link {
   text-transform: uppercase;
-  color: var(--color-text-900);
+  padding: var(--padding-y-x-xs);
+  border-radius: var(--border-radius-md);
 }
 
 .meals-block {
@@ -19,3 +20,32 @@
   flex-wrap: wrap;
 }
 
+.meals-top {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
+
+.meals-total-kcal {
+  display: flex;
+  flex-direction: row;
+  column-gap: 35px;
+  align-items: center;
+}
+
+.calories-total {
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  flex-direction: row-reverse;
+  gap: 10px;
+}
+
+.calories-total::before {
+  content: '';
+  display: block;
+  width: 25px;
+  height: 25px;
+  background: url('/src/assets/images/icons/kcal_icon.png') center;
+  background-size: contain;
+}
