@@ -5,9 +5,14 @@ import type { MotionProps } from 'motion/react';
 import type IMealMutation from '../../../types/meals/mealMutation';
 import axiosAPI from '../../api/axiosAPI';
 import useGetMealsData from '../../hooks/useGetMealsData';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import React, { useCallback, useEffect } from 'react';
+import { isAxiosError } from 'axios';
+import { toast } from 'react-toastify';
 
 const MealForm = () => {
+  const params = useParams<{ idMeal: string }>();
+
   const {
     register,
     handleSubmit,
@@ -42,21 +47,63 @@ const MealForm = () => {
     },
   };
 
+  let renderError: React.ReactNode | null = null;
+  const getMealData = useCallback(async (id: string) => {
+    try {
+      const response = await axiosAPI.get<IMealMutation>(`meals/${id}.json`);
+      const mealDataRes = response.data;
+      reset(mealDataRes);
+    } catch {
+      if (isAxiosError(error)) {
+        if (error.response) {
+          renderError = (
+            <div className="centered-block">
+              <p className="error">Error {error.response.status}</p>
+            </div>
+          );
+        }
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (params.idMeal) {
+      void getMealData(params.idMeal);
+    }
+  }, [params.idMeal, getMealData]);
+
   const onSubmitMeal = async (data: IMealMutation) => {
-    await axiosAPI.post('meals.json', {
-      ...data,
-      meal_calorie: Number(data.meal_calorie),
+    reset({
+      meal_time: '',
+      meal_description: '',
+      meal_calorie: 0,
     });
 
-    reset();
-    navigate('/');
+    if (!params.idMeal) {
+      await axiosAPI.post('meals.json', {
+        ...data,
+        meal_calorie: Number(data.meal_calorie),
+      });
+      navigate('/');
+      toast.success('Meal created successfully!');
+    } else if (params.idMeal) {
+      toast.success('Meal updated successfully!');
+      await axiosAPI.put(`meals/${params.idMeal}.json`, {
+        ...data,
+        meal_calorie: Number(data.meal_calorie),
+      });
+    }
   };
 
   return (
     <>
       <div className="form-block">
+        {renderError}
         <form onSubmit={handleSubmit(onSubmitMeal)}>
           <div className="form-group">
+            <p className="type-form">
+              {params.idMeal ? 'Update meal' : 'Add new Meal'}
+            </p>
             <div className="form-input-block">
               <label htmlFor="meal_time" className="form-input-label">
                 Meal Calorie
@@ -145,9 +192,8 @@ const MealForm = () => {
 
             <Button
               type="submit"
-              // text={isEdit ? 'Update' : 'Create'}
+              text={params.idMeal ? 'Update' : 'Create'}
               motionAnimation={animation}
-              text="Test"
               className="form-button"
             />
           </div>

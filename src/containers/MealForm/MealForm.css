@@ -58,7 +58,7 @@ input:focus {
   flex-direction: column;
   gap: 20px;
   width: 75%;
-  margin: 10% auto 0;
+  margin: 5% auto 0;
   padding: var(--padding-y-x-sm);
   border: 1px solid var(--color-border);
   background: var(--color-bg-card-white);
@@ -131,4 +131,11 @@ input:focus {
   color: var(--color-text-white);
   padding: var(--padding-y-x-xs);
   border-radius: var(--border-radius-sm);
+}
+
+.type-form {
+  text-align: center;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  margin-bottom: 5%;
 }
