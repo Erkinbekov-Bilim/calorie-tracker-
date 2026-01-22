@@ -59,6 +59,7 @@ const useGetMealsData = (path?: string) => {
     loading,
     error,
     mealsData,
+    updateData: getData,
   };
 };
 
