@@ -6,9 +6,10 @@ import { Link } from 'react-router-dom';
 
 interface IMealCard {
   mealData: IMeal;
+  onDeleteMeal: (id: string) => void;
 }
 
-const MealCard: React.FC<IMealCard> = ({ mealData }) => {
+const MealCard: React.FC<IMealCard> = ({ mealData, onDeleteMeal }) => {
   return (
     <div className="meal-card">
       <div className="meal-card-info">
@@ -20,8 +21,11 @@ const MealCard: React.FC<IMealCard> = ({ mealData }) => {
         <p className="meal-calorie">{mealData.meal_calorie} kcal</p>
 
         <div className="meal-actions">
-          <Link className="meal-edit" to={`meals/${mealData.id}/edit`}/>
-          <Button className="meal-delete" />
+          <Link className="meal-edit" to={`meals/${mealData.id}/edit`} />
+          <Button
+            className="meal-delete"
+            onClick={() => onDeleteMeal(mealData.id)}
+          />
         </div>
       </div>
     </div>
