@@ -1,10 +1,11 @@
-import { color, motion, type MotionProps } from 'motion/react';
+import { motion, type MotionProps } from 'motion/react';
 import axiosAPI from '../../api/axiosAPI';
 import MealCard from '../../components/Meal/MealCard';
 import useGetMealsData from '../../hooks/useGetMealsData';
 import Loading from '../../UI/Loading/Loading';
 import './Home.css';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Home = () => {
   const { loading, error, mealsData, updateData } = useGetMealsData();
@@ -32,6 +33,7 @@ const Home = () => {
     try {
       await axiosAPI.delete(`meals/${id}.json`);
       updateData();
+      toast.error('Meal deleted successfully!');
     } catch (error) {
       console.log(error);
     }
