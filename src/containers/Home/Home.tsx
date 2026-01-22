@@ -43,7 +43,7 @@ const Home = () => {
         {mealsData.length > 0 &&
           error.message === '' &&
           mealsData.map((mealData) => (
-            <MealCard mealData={mealData} onDeleteMeal={onDeleteMeal} />
+            <MealCard mealData={mealData} onDeleteMeal={onDeleteMeal} key={mealData.id}/>
           ))}
       </>
     );
